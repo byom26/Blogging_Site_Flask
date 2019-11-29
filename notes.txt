@@ -1,0 +1,59 @@
+#To access & create database from cmd interface
+
+from flaskblog import db, Post, User
+db.create_all()
+user1 = User(username='byom', email='byom@demo.com', password='password')
+db.session.add(user1)
+user2 = User(username='nandu', email='nandu@demo.com', password='password')
+db.session.add(user2)
+db.session.commit()
+
+User.query.all()
+User.query.first()
+User.query.filter_by(username='byom').all()
+User.query.filter_by(username='byom').first()
+user = User.query.filter_by(username='byom').first()
+print(f'{user}, {user.id}', {user.email})
+user = User.query.get(1)
+
+post1 = Post(title='Blog 1', content='First Blog content !!', user_id=user.id)
+post2 = Post(title='Blog 2', content='Second Blog content !!', user_id=user.id)
+db.session.add(post1)
+db.session.add(post2)
+db.session.commit()
+user.posts
+
+for post in user.posts:
+    print(post.title)
+
+post.author #which we used using backref
+
+db.drop_all()
+db.create_all()
+User.query.all() # Returns an empty list
+Post.query.all() # Returns an empty list
+____________________________________________________
+# After creating package
+from flaskblog import db
+from flaskblog.models import User, Post
+User.query.all()
+
+__________________________________________________
+#To Generate a secret key
+import secrets
+secrets.token_hex(16)
+__________________________________________________
+
+routes.py file(v2. of app)= creates a thread and sends the mail in the background which
+makes a faster loading of pages
+##code snippet
+
+from threading import Thread
+
+def send_async_email(app, msg):
+    with app.app_context():
+        mail.send(msg)
+
+def send_reset_email(user) :
+.................
+    Thread(target=send_async_email, args=(app, msg)).start()
